@@ -20,7 +20,7 @@ public class ProdutoResource {
 	
 	@RequestMapping(value="/{id}", method=RequestMethod.GET)
 	public ResponseEntity<?> find(@PathVariable Integer id) {
-		Produto obj = service.buscar(id);
+		Produto obj = service.find(id);
 		if (obj == null) {
 			return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Error message");
 		}

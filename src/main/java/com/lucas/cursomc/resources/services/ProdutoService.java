@@ -12,7 +12,7 @@ public class ProdutoService {
 	@Autowired
 	private ProdutoRepository repo;
 	
-	public Produto buscar(Integer id) {
+	public Produto find(Integer id) {
 		return repo.findOne(id);
 	}
 
