@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.lucas.cursomc.domain.Produto;
-import com.lucas.cursomc.resources.services.CategoriaService;
 import com.lucas.cursomc.resources.services.ProdutoService;
 
 @RestController
