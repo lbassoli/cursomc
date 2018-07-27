@@ -5,16 +5,19 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.persistence.CollectionTable;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.lucas.cursomc.domain.enums.EnumPerfil;
 import com.lucas.cursomc.domain.enums.EnumTipoCliente;
 
 @Entity
@@ -30,6 +33,9 @@ public class Cliente implements Serializable{
 	private String cpfCnpj;
 	private Integer tipoCliente;
 	
+	@JsonIgnore
+	private String senha;
+	
 	@ElementCollection
 	@CollectionTable(name="telefone")
 	private Set<String> telefones = new HashSet<>();
@@ -41,21 +47,28 @@ public class Cliente implements Serializable{
 	@OneToMany(mappedBy="cliente")
 	private List<Pedido> pedidos = new ArrayList<>();
 	
-	public void setTipoCliente(Integer tipoCliente) {
-		this.tipoCliente = tipoCliente;
-	}
+	@ElementCollection(fetch=FetchType.EAGER)
+	@CollectionTable(name="PERFIS")
+	private Set<Integer> perfis = new HashSet<>();
 
 	public Cliente() {
+		addPerfil(EnumPerfil.CLIENTE);
 	}
 
-	public Cliente(String nome, String email, String cpfCnpj, EnumTipoCliente tipoCliente) {
+	public Cliente(String nome, String email, String cpfCnpj, EnumTipoCliente tipoCliente, String senha) {
 		super();
 		this.nome = nome;
 		this.email = email;
 		this.cpfCnpj = cpfCnpj;
 		this.tipoCliente = tipoCliente.getCodigo();
+		this.senha = senha;
+		addPerfil(EnumPerfil.CLIENTE);
 	}
 
+	public void setTipoCliente(Integer tipoCliente) {
+		this.tipoCliente = tipoCliente;
+	}
+	
 	public int getId() {
 		return id;
 	}
@@ -118,6 +131,22 @@ public class Cliente implements Serializable{
 
 	public void setPedidos(List<Pedido> pedidos) {
 		this.pedidos = pedidos;
+	}
+
+	public String getSenha() {
+		return senha;
+	}
+
+	public void setSenha(String senha) {
+		this.senha = senha;
+	}
+	
+	public Set<EnumPerfil> getPerfis(){
+		return perfis.stream().map(a -> EnumPerfil.getEnum(a)).collect(Collectors.toSet());
+	}
+	
+	public void addPerfil(EnumPerfil perfil) {
+		perfis.add(perfil.getCodigo());
 	}
 
 	@Override

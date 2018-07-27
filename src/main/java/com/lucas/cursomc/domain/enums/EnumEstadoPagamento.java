@@ -6,7 +6,7 @@ public enum EnumEstadoPagamento {
 	
 	PENDENTE(1, "Pendente"),
 	QUITADO(2, "Quitado"),
-	CANCELADO(2, "Cancelado"),
+	CANCELADO(3, "Cancelado"),
 	;
 	
 	private int codigo;
