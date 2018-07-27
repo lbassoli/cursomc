@@ -1,5 +1,7 @@
 package com.lucas.cursomc.resources.services;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,11 +16,11 @@ public class CategoriaService {
 	private CategoriaRepository repo;
 	
 	public Categoria find(Integer id){
-		Categoria obj = repo.findOne(id);
+		Optional<Categoria> obj = repo.findById(id);
 		if (obj == null) {
 			throw new ObjectNotFoundException("Objeto não encontrado - Id: " + id + " - Tipo: " + Categoria.class.getSimpleName());
 		}
-		return obj;
+		return obj.get();
 	}
 	
 	public Categoria insert(Categoria obj) {

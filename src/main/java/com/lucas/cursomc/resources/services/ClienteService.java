@@ -1,5 +1,7 @@
 package com.lucas.cursomc.resources.services;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -18,11 +20,11 @@ public class ClienteService {
 	private ClienteRepository repo;
 	
 	public Cliente find(Integer id){
-		Cliente obj = repo.findOne(id);
+		Optional<Cliente> obj = repo.findById(id);
 		if (obj == null) {
 			throw new ObjectNotFoundException("Objeto não encontrado - Id: " + id + " - Tipo: " + Cliente.class.getSimpleName());
 		}
-		return obj;
+		return obj.get();
 	}
 
 
