@@ -1,5 +1,6 @@
 package com.lucas.cursomc.resources;
 
+import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -15,9 +16,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.lucas.cursomc.domain.Cliente;
 import com.lucas.cursomc.dto.ClienteDTO;
+import com.lucas.cursomc.dto.ClienteNewDto;
 import com.lucas.cursomc.resources.services.ClienteService;
 
 import javassist.tools.rmi.ObjectNotFoundException;
@@ -57,6 +60,16 @@ public class ClienteResource {
 		List<Cliente> lista = service.findAll();
 		return ResponseEntity.ok().body(lista.stream().map(a -> new ClienteDTO(a)).collect(Collectors.toList()));
 	}
+	
+	@PreAuthorize("hasAnyRole('ADMIN')")
+	@RequestMapping(method=RequestMethod.POST)
+	public ResponseEntity<Void> insert(@Valid @RequestBody ClienteNewDto dto){
+		Cliente obj = service.insert(service.fromDTO(dto));
+		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").
+				buildAndExpand(obj.getId()).toUri();
+		return ResponseEntity.created(uri).build();
+	}
+	
 	
 	@RequestMapping(value="/page", method=RequestMethod.GET)
 	public ResponseEntity<Page<ClienteDTO>> findPage(
