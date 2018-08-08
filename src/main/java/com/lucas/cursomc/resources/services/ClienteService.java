@@ -41,7 +41,7 @@ public class ClienteService {
 	
 	public Cliente find(Integer id){
 		Optional<Cliente> obj = repo.findById(id);
-		if (obj == null) {
+		if (!obj.isPresent()) {
 			throw new ObjectNotFoundException("Objeto não encontrado - Id: " + id + " - Tipo: " + Cliente.class.getSimpleName());
 		}
 		return obj.get();
@@ -67,7 +67,7 @@ public class ClienteService {
 		try {
 			repo.deleteById(id);
 		} catch (DataIntegrityViolationException e) {
-			throw new DataIntegrityException("Não é possível excluir o cliente que possui entidades relacionadas");
+			throw new DataIntegrityException("Não é possível excluir o cliente porque há pedidos relacionados");
 		}
  	}
 	
@@ -87,7 +87,7 @@ public class ClienteService {
 	public Cliente fromDTO(ClienteNewDto dto) {
 		Cliente cli = new Cliente(null, dto.getNome(), dto.getEmail(), dto.getCpfCnpj(), EnumTipoCliente.getTipoCliente(dto.getTipoCliente()));
 		Optional<Cidade> objCidade = cidadeRepository.findById(dto.getCidadeId());
-		if (objCidade == null) {
+		if (!objCidade.isPresent()) {
 			throw new ObjectNotFoundException("Objeto cidade não encontrado - Id: " + dto.getCidadeId() + " - Tipo: " + Cidade.class.getSimpleName());
 		}
 		Endereco end = new Endereco(dto.getLogradouro(), dto.getNumero(), dto.getComplemento(), dto.getBairro(), dto.getCep(), cli, objCidade.get());
