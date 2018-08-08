@@ -62,7 +62,7 @@ public class ClienteService {
 		return repo.save(cliente);
 	}
 	
-	public void delete(Integer id) {
+	public void delete(Integer id) { 
 		find(id);
 		try {
 			repo.deleteById(id);
