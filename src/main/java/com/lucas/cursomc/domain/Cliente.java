@@ -77,10 +77,6 @@ public class Cliente implements Serializable{
 		addPerfil(EnumPerfil.CLIENTE);
 	}
 
-	public void setTipoCliente(Integer tipoCliente) {
-		this.tipoCliente = tipoCliente;
-	}
-	
 	public Integer getId() {
 		return id;
 	}
@@ -120,7 +116,7 @@ public class Cliente implements Serializable{
 	public void setTipoCliente(EnumTipoCliente tipoCliente) {
 		this.tipoCliente = tipoCliente.getCodigo();
 	}
-
+	
 	public Set<String> getTelefones() {
 		return telefones;
 	}
