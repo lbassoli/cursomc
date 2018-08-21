@@ -15,6 +15,7 @@ import com.lucas.cursomc.exceptions.ObjectNotFoundException;
 import com.lucas.cursomc.resources.repositories.ItemPedidoRepository;
 import com.lucas.cursomc.resources.repositories.PagamentoRepository;
 import com.lucas.cursomc.resources.repositories.PedidoRepository;
+import com.lucas.cursomc.resources.services.mail.EmailService;
 
 @Service
 public class PedidoService {
@@ -36,6 +37,9 @@ public class PedidoService {
 	
 	@Autowired
 	private ClienteService clienteService;
+	
+	@Autowired
+	private EmailService emailService;
 	
 	public Pedido find(Integer id){
 		Optional<Pedido> obj = repo.findById(id);
@@ -65,7 +69,7 @@ public class PedidoService {
 			item.setPedido(obj);
 		}
 		itemPedidoRepository.saveAll(obj.getItens());
-		System.out.println(obj);
+		emailService.sendOrderConfirmationEmail(obj);
 		return obj;
 	}
 
