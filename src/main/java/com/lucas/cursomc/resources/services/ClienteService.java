@@ -15,14 +15,17 @@ import org.springframework.transaction.annotation.Transactional;
 import com.lucas.cursomc.domain.Cidade;
 import com.lucas.cursomc.domain.Cliente;
 import com.lucas.cursomc.domain.Endereco;
+import com.lucas.cursomc.domain.enums.EnumPerfil;
 import com.lucas.cursomc.domain.enums.EnumTipoCliente;
 import com.lucas.cursomc.dto.ClienteDTO;
 import com.lucas.cursomc.dto.ClienteNewDto;
+import com.lucas.cursomc.exceptions.AuthorizationException;
 import com.lucas.cursomc.exceptions.DataIntegrityException;
 import com.lucas.cursomc.exceptions.ObjectNotFoundException;
 import com.lucas.cursomc.resources.repositories.CidadeRepository;
 import com.lucas.cursomc.resources.repositories.ClienteRepository;
 import com.lucas.cursomc.resources.repositories.EnderecoRepository;
+import com.lucas.cursomc.security.UserSS;
 
 @Service
 public class ClienteService {
@@ -40,6 +43,10 @@ public class ClienteService {
 	private EnderecoRepository enderecoRepository;
 	
 	public Cliente find(Integer id){
+		UserSS user = UserService.authenticated();
+		if (user == null || !user.hasRole(EnumPerfil.ADMIN) && !id.equals(user.getId())) {
+			throw new AuthorizationException("Acesso negado");
+		}
 		Optional<Cliente> obj = repo.findById(id);
 		if (!obj.isPresent()) {
 			throw new ObjectNotFoundException("Objeto não encontrado - Id: " + id + " - Tipo: " + Cliente.class.getSimpleName());
@@ -53,7 +60,6 @@ public class ClienteService {
 		obj = repo.save(obj);
 		enderecoRepository.saveAll(obj.getEnderecos());
 		return obj;
-
 	}
 	
 	public Cliente update(Cliente obj) {

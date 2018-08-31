@@ -32,7 +32,6 @@ public class ClienteResource {
 	@Autowired
 	private ClienteService service;
 	
-	@PreAuthorize("hasAnyRole('ADMIN')")
 	@RequestMapping(value="/{id}", method=RequestMethod.GET)
 	public ResponseEntity<Cliente> find(@PathVariable Integer id) throws ObjectNotFoundException {
 		Cliente obj = service.find(id);
@@ -56,6 +55,7 @@ public class ClienteResource {
 		return ResponseEntity.noContent().build();
 	}
 	
+	@PreAuthorize("hasAnyRole('ADMIN')")
 	@RequestMapping(method=RequestMethod.GET)
 	public ResponseEntity<List<ClienteDTO>> findAll() throws ObjectNotFoundException {
 		List<Cliente> lista = service.findAll();
@@ -71,7 +71,7 @@ public class ClienteResource {
 		return ResponseEntity.created(uri).build();
 	}
 	
-	
+	@PreAuthorize("hasAnyRole('ADMIN')")
 	@RequestMapping(value="/page", method=RequestMethod.GET)
 	public ResponseEntity<Page<ClienteDTO>> findPage(
 			@RequestParam(name="page", defaultValue="0") Integer page,
